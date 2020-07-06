@@ -7,6 +7,11 @@ import io.vertx.core.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.CorsHandler;
+import io.vertx.ext.web.handler.LoggerHandler;
+import io.vertx.ext.web.handler.SessionHandler;
+import io.vertx.ext.web.sstore.LocalSessionStore;
+import io.vertx.ext.web.sstore.SessionStore;
 
 public class MainVerticle extends AbstractVerticle {
 
@@ -16,6 +21,14 @@ public class MainVerticle extends AbstractVerticle {
 
         vertx.deployVerticle(new HelloVerticle());
         Router router = Router.router(vertx);
+
+        /**
+         * Creating session and corsHandler ,CsrfHandler and loogger handler
+         */
+        SessionStore store = LocalSessionStore.create(vertx);
+        router.route().handler(LoggerHandler.create());
+        router.route().handler(SessionHandler.create(store));
+        router.route().handler(CorsHandler.create("localhost"));
         router.get("/api/v1/hello").handler(this::getNormalRouter);
         router.get("/api/v1/hello/:name").handler(this::getName);
 
