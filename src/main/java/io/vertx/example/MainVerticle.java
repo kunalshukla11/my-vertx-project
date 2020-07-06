@@ -10,8 +10,10 @@ public class MainVerticle extends AbstractVerticle {
     @Override
     public void start(Future future) {
 
+        DeploymentOptions options =new DeploymentOptions();
+        options.setWorker(true).setInstances(8);
 
-        vertx.deployVerticle(new HelloVerticle());
+        vertx.deployVerticle("io.vertx.example.HelloVerticle", options);
         Router router = Router.router(vertx);
         router.get("/api/v1/hello").handler(this::getNormalRouter);
         router.get("/api/v1/hello/:name").handler(this::getName);

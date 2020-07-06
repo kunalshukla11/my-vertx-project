@@ -13,6 +13,7 @@
         <vertx.version>3.8.2</vertx.version>
         <vertx.verticle>io.vertx.example.MainVerticle</vertx.verticle>
 
+
         <!-- Maven plugins -->
         <vertx-maven-plugin.version>1.0.22</vertx-maven-plugin.version>
     </properties>
@@ -27,6 +28,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>io.vertx</groupId>
