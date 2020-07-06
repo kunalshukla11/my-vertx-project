@@ -15,9 +15,11 @@ public class MainVerticle extends AbstractVerticle {
     public void start(Promise<Void> promise) {
 
 
-        vertx.deployVerticle(new HelloVerticle());
+        vertx.deployVerticle("Hello.groovy");
+        vertx.deployVerticle("Hello.js");
         Router router = Router.router(vertx);
-        router.route().handler(ctx->{
+        //disable authentication
+       /* router.route().handler(ctx->{
             String authToken = ctx.request().getHeader("AUTH_TOKEN");
             if( authToken!= null &&"mySuperSecureAuthToken".contentEquals(authToken)){
                 ctx.next();
@@ -25,7 +27,7 @@ public class MainVerticle extends AbstractVerticle {
                 ctx.response().setStatusCode(401).setStatusMessage("un authorise").end();
             }
 
-        });
+        });*/
 
         router.get("/api/v1/hello").handler(this::getNormalRouter);
         router.get("/api/v1/hello/:name").handler(this::getName);

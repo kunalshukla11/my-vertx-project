@@ -1,12 +1,6 @@
-In this branch we will learn how to chain routers
-it will be chained in serial wise manner , u can go on adding filter to routers
+In this branch we are show casing the ability of vertx that how it is polyglot
+Solve ur progamming power by using other languages and packaging them togethe
+We added Groovy and java script code in place of Hello verticle (which was servicing two get requests)
+Now it will compile the code for groovy and javascript when the jar is run
 
-And also u can add static content , if the request does not pass to any of the routers it will be give a static content
-
-like simple authentication methods all our routes
-
-For see authentication
-After jar build hit like this Auth Token
-curl -H "AUTH_TOKEN: mySuperSecureAuthToken" http://localhost:8080/api/v1/hello
-curl -H "AUTH_TOKEN: mySuperSecureAuthToken" http://localhost:8080/api/v1/hello/narendra
 
