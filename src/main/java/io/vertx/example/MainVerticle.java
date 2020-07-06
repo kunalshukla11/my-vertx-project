@@ -7,6 +7,7 @@ import io.vertx.core.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.StaticHandler;
 
 public class MainVerticle extends AbstractVerticle {
 
@@ -16,8 +17,19 @@ public class MainVerticle extends AbstractVerticle {
 
         vertx.deployVerticle(new HelloVerticle());
         Router router = Router.router(vertx);
+        router.route().handler(ctx->{
+            String authToken = ctx.request().getHeader("AUTH_TOKEN");
+            if( authToken!= null &&"mySuperSecureAuthToken".contentEquals(authToken)){
+                ctx.next();
+            } else {
+                ctx.response().setStatusCode(401).setStatusMessage("un authorise").end();
+            }
+
+        });
+
         router.get("/api/v1/hello").handler(this::getNormalRouter);
         router.get("/api/v1/hello/:name").handler(this::getName);
+        router.route().handler(StaticHandler.create("web"));
 
 //using configuratin store
         ConfigStoreOptions deafaultConfig = new ConfigStoreOptions()

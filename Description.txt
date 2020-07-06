@@ -1,2 +1,12 @@
-In this branch we done configuration mangangement and pulled our configuration from the config.json
-using vertx-cofig
+In this branch we will learn how to chain routers
+it will be chained in serial wise manner , u can go on adding filter to routers
+
+And also u can add static content , if the request does not pass to any of the routers it will be give a static content
+
+like simple authentication methods all our routes
+
+For see authentication
+After jar build hit like this Auth Token
+curl -H "AUTH_TOKEN: mySuperSecureAuthToken" http://localhost:8080/api/v1/hello
+curl -H "AUTH_TOKEN: mySuperSecureAuthToken" http://localhost:8080/api/v1/hello/narendra
+
