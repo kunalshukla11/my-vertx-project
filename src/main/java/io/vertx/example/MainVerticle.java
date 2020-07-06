@@ -1,15 +1,17 @@
 package io.vertx.example;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
+import io.vertx.config.ConfigRetriever;
+import io.vertx.config.ConfigRetrieverOptions;
+import io.vertx.config.ConfigStoreOptions;
+import io.vertx.core.*;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
 public class MainVerticle extends AbstractVerticle {
 
     @Override
-    public void start(Future future) {
-
+    public void start(Promise<Void> promise) {
 
 
         vertx.deployVerticle(new HelloVerticle());
@@ -17,48 +19,61 @@ public class MainVerticle extends AbstractVerticle {
         router.get("/api/v1/hello").handler(this::getNormalRouter);
         router.get("/api/v1/hello/:name").handler(this::getName);
 
+//using configuratin store
+        ConfigStoreOptions deafaultConfig = new ConfigStoreOptions()
+                .setType("file")
+                .setFormat("json")
+                .setConfig(new JsonObject().put("path", "config.json"));
 
-        vertx.createHttpServer().requestHandler(router).listen(getHttpPort(), result -> {
-            if (result.succeeded()) {
-                future.complete();
+        ConfigRetrieverOptions opts= new ConfigRetrieverOptions()
+                .addStore(deafaultConfig);
 
-                System.out.println("Sysout deployed");
-            } else {
-                future.fail(result.cause());
-            }
-        });
+        ConfigRetriever configRetriever = ConfigRetriever.create(vertx, opts);
+        configRetriever.getConfig(getAsyncResultHandler(promise, router));
+
+
+
 
     }
 
-    private int getHttpPort() {
-        int httpPort;
-        try{
-            httpPort= Integer.parseInt(System.getProperty("http.port" ,"8085"));
-        }catch (NumberFormatException exception){
-            httpPort= 8085;
+    private Handler<AsyncResult<JsonObject>> getAsyncResultHandler(Promise<Void> promise, Router router) {
+        return ar-> {
+            configHandler(promise, router, ar);
+        };
+    }
+
+    private void configHandler(Promise<Void> promise, Router router, AsyncResult<JsonObject> ar) {
+        if(ar.succeeded()){
+
+            JsonObject config = ar.result();
+            JsonObject http= config.getJsonObject("http");
+            int httpPort = http.getInteger("port");
+            vertx.createHttpServer().requestHandler(router).listen(httpPort);
+            promise.complete();
+        }else {
+
+            promise.fail("unable to load the configurations");
         }
-        return httpPort;
     }
+
 
     private void getNormalRouter(RoutingContext routingContext) {
 
-        vertx.eventBus().request("hello.vertx.addr", "", reply->{
+        vertx.eventBus().request("hello.vertx.addr", "", reply -> {
             routingContext.response().end((String) reply.result().body());
         });
 
 
     }
-
 
 
     private void getName(RoutingContext routingContext) {
         String name = routingContext.pathParam("name");
-        vertx.eventBus().request("hello.named.addr", name, reply->{
+        vertx.eventBus().request("hello.named.addr", name, reply -> {
             routingContext.response().end((String) reply.result().body());
         });
 
     }
-
 
 
 }

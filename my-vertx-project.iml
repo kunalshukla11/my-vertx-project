@@ -44,5 +44,6 @@
     <orderEntry type="library" name="Maven: org.infinispan:infinispan-clustered-counter:9.4.10.Final" level="project" />
     <orderEntry type="library" name="Maven: io.reactivex.rxjava2:rxjava:2.2.12" level="project" />
     <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.3" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-config:3.8.2" level="project" />
   </component>
 </module>

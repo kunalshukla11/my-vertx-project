@@ -1,6 +1,2 @@
-Here it will use infinisapn to make a cluter of different nodes on different port
- your service will be exposed to different port and it will be distributed load '
- Run you jar in below format using different port
-
-
- java -jar target\my-vertx-project-1.0-SNAPSHOT.jar -cluster -Djava.net.preferIPv6Stack=true -Dhttp.port=4488
+In this branch we done configuration mangangement and pulled our configuration from the config.json
+using vertx-cofig
