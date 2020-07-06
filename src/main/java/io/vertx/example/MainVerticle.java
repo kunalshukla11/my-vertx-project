@@ -42,6 +42,8 @@ public class MainVerticle extends AbstractVerticle {
                 .addStore(deafaultConfig);
 
         ConfigRetriever configRetriever = ConfigRetriever.create(vertx, opts);
+
+
         configRetriever.getConfig(getAsyncResultHandler(promise, router));
 
 
