@@ -2,7 +2,11 @@ package io.vertx.example;
 
 import io.vertx.core.AbstractVerticle;
 
+import java.util.UUID;
+
 public class HelloVerticle extends AbstractVerticle {
+
+    String veticleId = UUID.randomUUID().toString();
 
     @Override
     public void start(){
@@ -12,7 +16,7 @@ public class HelloVerticle extends AbstractVerticle {
 
          vertx.eventBus().consumer("hello.named.addr",msg->{
              String name=(String) msg.body();
-             msg.reply(String.format("Hello %s giving from another verticle", name));
+             msg.reply(String.format("Hello %s from %s another verticle", name ,veticleId));
 
         });
     }
