@@ -1,5 +1,6 @@
 package io.vertx.example;
 
+import com.sun.javafx.runtime.SystemProperties;
 import io.vertx.core.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -11,7 +12,7 @@ public class MainVerticle extends AbstractVerticle {
     public void start(Future future) {
 
         DeploymentOptions options =new DeploymentOptions();
-        options.setWorker(true).setInstances(8);
+        options.setWorker(true).setInstances(83);
 
         vertx.deployVerticle("io.vertx.example.HelloVerticle", options);
         Router router = Router.router(vertx);
@@ -19,7 +20,7 @@ public class MainVerticle extends AbstractVerticle {
         router.get("/api/v1/hello/:name").handler(this::getName);
 
 
-        vertx.createHttpServer().requestHandler(router).listen(8085, result -> {
+        vertx.createHttpServer().requestHandler(router).listen(getHttpPort(), result -> {
             if (result.succeeded()) {
                 future.complete();
 
@@ -29,6 +30,16 @@ public class MainVerticle extends AbstractVerticle {
             }
         });
 
+    }
+
+    private int getHttpPort() {
+        int httpPort;
+        try{
+            httpPort= Integer.parseInt(System.getProperty("http.port" ,"8085"));
+        }catch (NumberFormatException exception){
+            httpPort= 8085;
+        }
+        return httpPort;
     }
 
     private void getNormalRouter(RoutingContext routingContext) {
